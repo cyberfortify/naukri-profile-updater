@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 import time
 import os
 import traceback
+import requests
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -13,6 +14,19 @@ from selenium.webdriver.support import expected_conditions as EC
 load_dotenv()
 EMAIL = os.getenv("NAUKRI_EMAIL")
 PASSWORD = os.getenv("NAUKRI_PASSWORD")
+
+# Telegram credentials
+TELEGRAM_TOKEN = "8448137224:AAHCVtuKTCGLMGJxqn6PKqKGqNZUWoemlnw"
+CHAT_ID = "1448478243"
+
+def send_telegram_notification(message):
+    """Send Telegram notification using bot"""
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+        params = {"chat_id": CHAT_ID, "text": message}
+        requests.get(url, params=params)
+    except Exception as e:
+        print(f"⚠️ Failed to send Telegram notification: {e}")
 
 # Chrome Driver setup
 options = Options()
@@ -72,10 +86,13 @@ try:
     time.sleep(3)
 
     print("✅ Profile Summary updated successfully!")
+    send_telegram_notification("😎 Bhai Tu Tension Mat Le — Maine Naukri Profile Summary *updated* kar diya hai! ✅🔥")
 
 except Exception as e:
     print("❌ Error occurred:")
     traceback.print_exc()
+    send_telegram_notification("🤦‍♂️ Bhai Yr... Naukri Profile update *fail* ho gaya 😭 Shit!! Logs check karle warna HR ka call miss ho jayega! 📞💔")
+
 
 finally:
     driver.quit()
