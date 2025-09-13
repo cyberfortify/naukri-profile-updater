@@ -15,15 +15,15 @@ load_dotenv()
 EMAIL = os.getenv("NAUKRI_EMAIL")
 PASSWORD = os.getenv("NAUKRI_PASSWORD")
 
-# Telegram credentials
-TELEGRAM_TOKEN = "8448137224:AAHCVtuKTCGLMGJxqn6PKqKGqNZUWoemlnw"
-CHAT_ID = "1448478243"
+# Telegram credentials (from .env)
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 def send_telegram_notification(message):
     """Send Telegram notification using bot"""
     try:
         url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-        params = {"chat_id": CHAT_ID, "text": message}
+        params = {"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
         requests.get(url, params=params)
     except Exception as e:
         print(f"⚠️ Failed to send Telegram notification: {e}")
@@ -92,7 +92,6 @@ except Exception as e:
     print("❌ Error occurred:")
     traceback.print_exc()
     send_telegram_notification("🤦‍♂️ Bhai Yr... Naukri Profile update *fail* ho gaya 😭 Shit!! Logs check karle warna HR ka call miss ho jayega! 📞💔")
-
 
 finally:
     driver.quit()
